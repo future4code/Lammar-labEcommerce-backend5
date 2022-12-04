@@ -4,8 +4,6 @@
 
 #### [Link do Deploy](https://labecommerce-backend-caina.onrender.com)
 
-### Link da Documentação
-
 #### [Documentação no Postman](https://documenter.getpostman.com/view/22377076/2s8YzMY5jh)
 
 ##
