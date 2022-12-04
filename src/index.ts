@@ -2,6 +2,7 @@ import express, { Request, Response } from "express"
 import knex from "knex"
 import cors from 'cors'
 import dotenv from "dotenv";
+
 dotenv.config();
 
 export const connection = knex({
@@ -21,19 +22,18 @@ app.use(express.json())
 
 app.use(cors())
 
-app.listen(3003, () => {
+app.listen(process.env.PORT || 3003, () => {
     console.log("Server is running in http://localhost:3003");
 });
 
 // Função para cadastro de usuários
 
 const createUser = async (name:string, email:string, password:string): Promise<void> => {
+    const userId = await connection("labecommerce_users")
+    .count("id as index")
+    const index:number = Number(userId[0].index) + 1
     await connection ("labecommerce_users")
-    .insert({
-        name: name,
-        email: email,
-        password: password
-    })
+    .insert({id: index, name : name, email: email, password: password})
 }
 
 // Endpoint para cadastro de usuários
@@ -115,3 +115,58 @@ app.get('/users', async (req: Request, res: Response): Promise<void> => {
     }
 })
 
+
+// Função registra uma compra
+
+const registerPurchase = async (user_id:number, product_id:number, quantity:number): Promise<void> => {
+    
+    const price = (await connection("labecommerce_products")
+    .select('price as price')
+    .where( {id: product_id})
+    )[0].price
+    
+    await connection ("labecommerce_purchases")
+    .insert({
+        user_id: user_id,
+        product_id: product_id,
+        quantity: quantity,
+        total_price: price * quantity
+    })
+}
+
+
+
+//Endpoint para registro de uma compra
+
+app.post('/purchases', async (req: Request, res: Response): Promise<void> => {
+    try {
+        await registerPurchase(req.body.user_id, req.body.product_id, req.body.quantity)
+        res.send("Compra registrada com sucesso")
+        res.end()
+    } catch (error:any) {
+        console.log(error.message)
+        res.status(500).send(error.message)
+    }
+})
+
+// Função para retornar todas as compras de um usuário
+
+
+const getUserPurchases = async (user_id:number): Promise<any> => {
+    const response = await connection("labecommerce_purchases")
+    .where( {user_id: user_id})
+    return response
+}
+
+// Endpoint para retornar todas as compras de um usuário
+
+app.get('/users/:user_id/purchases', async (req: Request, res: Response): Promise<void> => {
+    try {
+        const result = await getUserPurchases(Number(req.params.user_id))
+        res.send(result)
+        res.end()
+    } catch (error:any) {
+        console.log(error.message)
+        res.status(500).send(error.message)
+    }
+})
