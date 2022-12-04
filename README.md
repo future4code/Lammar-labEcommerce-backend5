@@ -2,9 +2,7 @@
 
 ## Esta API é um MVP para um sistema de Ecommerce
 
-### [Link do Deploy](https://labecommerce-backend-caina.onrender.com)
-
-#### [LabEcommerce API]([https://documenter.getpostman.com/view/16817790/UVC3kTiC](https://labecommerce-backend-caina.onrender.com))
+#### [Link do Deploy](https://labecommerce-backend-caina.onrender.com)
 
 ### Link da Documentação
 
