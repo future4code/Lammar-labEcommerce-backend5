@@ -102,9 +102,9 @@ const getAllProducts = async (): Promise<void> => {
 
 
 
-// Endpoint para listagem de todos os usuários
+// Endpoint para listagem de todos os produtos
 
-app.get('/users', async (req: Request, res: Response): Promise<void> => {
+app.get('/products', async (req: Request, res: Response): Promise<void> => {
     try {
         const result = await getAllProducts()
         res.send(result)
